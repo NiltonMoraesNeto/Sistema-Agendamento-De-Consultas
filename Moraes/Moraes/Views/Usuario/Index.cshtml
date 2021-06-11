@@ -1,0 +1,55 @@
+﻿@model UsuarioModel
+<h3>Lista de Usuários</h3>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">PERFIL</th>
+            <th class="text-center">EMPRESA</th>
+            <th class="text-center">NOME</th>
+            <th class="text-center">EMAIL</th>
+            <th class="text-center">COR</th>
+            <th class="text-center">AÇÕES</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuarios)
+            {
+                <tr>
+                    <td class="text-center">@item.IdUsuario</td>
+                    <td class="text-center">@item.IdPerfil</td>
+                    <td class="text-center">@item.IdLicenca</td>
+                    <td class="text-center">@item.Nome</td>
+                    <td class="text-center">@item.Email</td>
+                    <td class="text-center">@item.Color</td>
+                    <td class="text-center"><button type="button" class="btn btn-warning" onclick="Editar(@item.IdUsuario)">Editar</button> <button type="button" class="btn btn-danger" onclick="Excluir(@item.IdUsuario)">Deletar</button></td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+<br />
+
+<button class="btn btn-block btn-primary" type="button" onclick="Cadastrar()">Cadastrar Usuário</button>
+
+<script>
+
+    function Cadastrar() {
+        window.location.href = "../Usuario/Cadastro";
+    }
+
+    function Editar(id) {
+        window.location.href = "../Usuario/Cadastro/" + id;
+    }
+
+    function Excluir(id) {
+        window.location.href = "../Usuario/Excluir/" + id;
+    }
+
+</script>

@@ -1,0 +1,23 @@
+﻿<h2>Excluir Consulta</h2>
+
+<h3>Deseja realmente excluir a Consulta selecionado?</h3>
+
+<button type="button" class="btn btn-danger" onclick="Nao()">Não</button>
+<button type="button" class="btn btn-success" onclick="Sim()">Sim</button>
+
+
+<script>
+
+    function Sim()
+    {
+        //alert('sim');
+        window.location.href = '../../Calendario/ExcluirCalendario/' + '@ViewData["IdExcluir"].ToString()';
+    }
+
+    function Nao()
+    {
+        //alert('nao');
+        window.location.href = '../../Calendario/Lista';
+    }
+
+</script>

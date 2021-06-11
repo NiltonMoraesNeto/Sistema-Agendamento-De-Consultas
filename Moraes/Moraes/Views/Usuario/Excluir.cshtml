@@ -1,0 +1,23 @@
+﻿<h2>Excluir Usuário</h2>
+
+<h3>Deseja realmente excluir o usuário selecionado?</h3>
+
+<button type="button" class="btn btn-danger" onclick="Nao()">Não</button>
+<button type="button" class="btn btn-success" onclick="Sim()">Sim</button>
+
+
+<script>
+
+    function Sim()
+    {
+        //alert('sim');
+        window.location.href = '../../Usuario/ExcluirUsuario/' + '@ViewData["IdExcluir"].ToString()';
+    }
+
+    function Nao()
+    {
+        //alert('nao');
+        window.location.href = '../../Usuario';
+    }
+
+</script>

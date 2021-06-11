@@ -1,0 +1,56 @@
+﻿@model UsuarioModel
+<h2>Dados do seu Usuário</h2>
+
+<h3>Título</h3>
+
+<style>
+    .fundo {
+        background-color: #fafafa !important;
+        opacity: 1 !important;
+        border: none !important;
+        text-align: center !important;
+    }
+</style>
+
+<input type="hidden" asp-for="IdUsuario" />
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">PERFIL</th>
+            <th class="text-center">EMPRESA</th>
+            <th class="text-center">NOME</th>
+            <th class="text-center">EMAIL</th>
+            <th class="text-center">COR HEXA</th>
+            <th class="text-center">FOTO</th>
+            <th class="text-center">FOTO</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuarios2)
+            {
+                <tr>
+                    <td class="text-center">@item.IdUsuario</td>
+                    <td class="text-center">@item.IdPerfil</td>
+                    <td class="text-center">@item.IdLicenca</td>
+                    <td class="text-center">@item.Nome</td>
+                    <td class="text-center">@item.Email</td>
+                    <td class="text-center">@item.Color</td>
+                    <td class="text-center"><img src="../FotoPerfil/@item.Foto" alt="Foto Não Encontrada" /></td>
+                    <td class="text-center"><img src="~/FotoPerfil/@item.Foto" alt="Foto Não Encontrada" /></td>
+                    <!--<img src="@Url.Content(ViewBag.Tree)" />-->
+                    <!--<img src="~/FotoPerfil/niltonfoto2.jpg" asp-append-version="true">
+                        <img src="~/FotoPerfil/@item.Foto" />-->
+                    <!--<img src="../FotoPerfil/@Url.Content(@item.Foto)" />-->
+                    <!--<img src="@Url.Content(ViewBag.Tree)" />-->
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

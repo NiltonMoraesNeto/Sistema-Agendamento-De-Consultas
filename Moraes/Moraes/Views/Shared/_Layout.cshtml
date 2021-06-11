@@ -1,0 +1,227 @@
+﻿@inject Moraes.Infra.IUser UserAuth
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Moraes iT</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <!--<link rel="stylesheet" href="style.css">-->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+
+    <!-- Adicionando Javascript BUSCA CEP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.min.js"></script>-->
+    <!-- Máscara CNPJ CPF-->
+
+    <script>
+
+        $(document).ready(function () {
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#Rua").val("");
+                $("#Bairro").val("");
+                $("#Cidade").val("");
+                $("#Estado").val("");
+            }
+
+            //Quando o campo cep perde o foco.
+            $("#Cep").blur(function () {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if (validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#Rua").val("...");
+                        $("#Bairro").val("...");
+                        $("#Cidade").val("...");
+                        $("#Estado").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                $("#Rua").val(dados.logradouro);
+                                $("#Bairro").val(dados.bairro);
+                                $("#Cidade").val(dados.localidade);
+                                $("#Estado").val(dados.uf);
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
+        });
+
+    </script>
+
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Moraes iT</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <p>Moraes iT</p>
+                <li class="active">
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-calendar" aria-hidden="true"></i> Calendário</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Index","Calendario")"><i class="fa fa-calendar" aria-hidden="true"></i> Home</a>
+                        </li>
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Cadastro","Calendario")"><i class="fa fa-cog fa-spin fa-fw"></i> Novo Agendamento</a>
+                        </li>
+                    </ul>
+                </li>
+                <!--<li>
+        <a href="#">Clientes</a>
+    </li>-->
+                <li>
+                    <a href="#Clientes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-child" aria-hidden="true"></i> Clientes</a>
+                    <ul class="collapse list-unstyled" id="Clientes">
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Cadastro","Cliente")"><i class="fa fa-plus" aria-hidden="true"></i> Cadastrar</a>
+                        </li>
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Index","Cliente")"><i class="fa fa-list-ol" aria-hidden="true"></i> Listagem</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#Usuario" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-user-circle" aria-hidden="true"></i> Usuários</a>
+                    <ul class="collapse list-unstyled" id="Usuario">
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Cadastro","Usuario")"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar</a>
+                        </li>
+                        <li>
+                            <a class="linkMenu" href="@Url.Action("Index","Usuario")"><i class="fa fa-list-ol" aria-hidden="true"></i> Listagem</a>
+                        </li>
+                        <!--<li>
+                            <a class="linkMenu" href="@Url.Action("Account","Usuario")">Dados do Seu Usuário</a>
+                        </li>-->
+                    </ul>
+                </li>
+                <li>
+                    <p>@UserAuth.Nome</p>
+                </li>
+                <!--<li>
+        <a href="#">Contact</a>
+    </li>-->
+            </ul>
+
+            <!--<ul class="list-unstyled CTAs">
+                <li>
+                    <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
+                </li>
+                <li>
+                    <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+                </li>
+            </ul>-->
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Expandir / Esconder</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#"><p>@UserAuth.Nome</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Account","Usuario")">Dados do Seu Usuário</a>
+                            </li>
+                            <!--<li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Page</a>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+    <script>
+        $('.CpfCNPJ').mask('000.000.000-00', { reverse: true });
+        $('.TelefoneFixo').mask('(00) 0000-0000');
+        $('.TelefoneCelular').mask('(00) 00000-0000');
+        //$('.DataNascimento').mask('00/00/0000');
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

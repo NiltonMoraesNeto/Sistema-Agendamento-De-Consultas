@@ -1,0 +1,61 @@
+﻿<link href="~/css/main_1.css" rel="stylesheet" />
+<link href="~/css/main_2.css" rel="stylesheet" />
+<link href="~/css/main_3.css" rel="stylesheet" />
+
+<script src="~/locale/pt-br.js"></script>
+<script src="~/js/pt-br.js"></script>
+
+<script src="~/js/main_1.js"></script>
+<script src="~/js/main_2.js"></script>
+<script src="~/js/main_3.js"></script>
+<script src="~/js/main_4.js"></script>
+<script src="~/js/main_5.js"></script>
+<script src="~/js/moment.min.js"></script>
+
+
+<script src="~/locale/pt-br.js"></script>
+
+<script>
+
+
+
+    var eventos = new Array();
+        var array = @Html.Raw(Json.Serialize(@ViewBag.Eventos));
+        for(var i =0; i<array.length;i++){
+            eventos[i] = array[i];
+    }
+
+    console.log(eventos);
+
+    var timeInMs = Date.now();
+    var initialLocaleCode = 'pt-br';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            defaultDate: timeInMs,
+            locale: initialLocaleCode,
+            buttonIcons: true, // show the prev/next text
+            weekNumbers: false, // numero da semana do ano
+            navLinks: true, // can click day/week names to navigate views
+            editable: true,
+            dayMaxEvents: false,
+            //url: "/Calendario/Edit/" + Eventos[i].IdCalendario + "'",
+            //url: "/Calendario/Edit/2",
+            events: eventos//@ViewBag.Eventos
+
+
+        });
+
+        calendar.render();
+    });
+
+</script>
+<div id="calendar"></div>

@@ -1,0 +1,282 @@
+﻿@inject Moraes.Infra.IUser UserAuth
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] NMN - Sistema Gestão de Vendas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link id="themecss" rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/light/all.min.css" />-->
+    <link id="themecss" rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/dark-gradient/all.min.css" />
+    <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+    <style>
+        .linkMenu {
+            color: #ffffff !important;
+        }
+
+        .outer {
+            margin: auto;
+            max-width: 600px;
+            min-height: 100px;
+        }
+
+        .mymenu {
+            width: 100%;
+        }
+
+            .mymenu .right {
+                float: right;
+            }
+
+        .megamenu:hover,
+        .megamenu.sui-menu-item-selected {
+            background-color: transparent;
+            color: inherit;
+        }
+
+        .megamenu .flag {
+            display: inline-block;
+        }
+
+        .megamenu .mmlink {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .megamenu-inner {
+            width: 400px;
+        }
+    </style>
+
+    <!-- Adicionando Javascript BUSCA CEP -->
+    <script>
+
+        $(document).ready(function () {
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#Rua").val("");
+                $("#Bairro").val("");
+                $("#Cidade").val("");
+                $("#Estado").val("");
+            }
+
+            //Quando o campo cep perde o foco.
+            $("#Cep").blur(function () {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if (validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#Rua").val("...");
+                        $("#Bairro").val("...");
+                        $("#Cidade").val("...");
+                        $("#Estado").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                $("#Rua").val(dados.logradouro);
+                                $("#Bairro").val(dados.bairro);
+                                $("#Cidade").val(dados.localidade);
+                                $("#Estado").val(dados.uf);
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
+        });
+
+    </script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.min.js"></script>
+    <!--<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/qunit/qunit-1.11.0.js"></script>-->
+    <!-- Máscara CNPJ CPF-->
+    <!--<script>
+         $("#CpfCNPJ").keydown(function () {
+             try {
+                 $("#CpfCNPJ").unmask();
+             } catch (e) { }
+
+             var tamanho = $("#CpfCNPJ").val().length;
+
+             if (tamanho < 11) {
+                 $("#CpfCNPJ").mask("999.999.999-99");
+             } else {
+                 $("#CpfCNPJ").mask("99.999.999/9999-99");
+             }
+
+             // ajustando foco
+             var elem = this;
+             setTimeout(function () {
+                 // mudo a posição do seletor
+                 elem.selectionStart = elem.selectionEnd = 10000;
+             }, 0);
+             // reaplico o valor para mudar o foco
+             var currentValue = $(this).val();
+             $(this).val('');
+             $(this).val(currentValue);
+         });
+     </script>-->
+
+
+
+</head>
+<body class="theme-light">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-12">
+            <div class="outer">
+                <ul id="mymenu">
+                    <li><a class="linkMenu" href="@Url.Action("Index","Calendario")">Home</a></li>
+                    <li data-href="#Calendario">
+                        <p>Calendário</p>
+                        <ul>
+                            <li><a class="linkMenu" href="@Url.Action("Cadastro","Calendario")">Novo Agendamento</a></li>
+                        </ul>
+                    </li>
+                    <li data-href="#products">
+                        <p>Serviços</p>
+                        <ul>
+                            <li>
+                                <p>Clientes</p>
+                                <ul>
+                                    <li><a class="linkMenu" href="@Url.Action("Cadastro","Cliente")">Cadastrar</a></li>
+                                    <li><a class="linkMenu" href="@Url.Action("Index","Cliente")">Listagem</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p>Usuários</p>
+                                <ul>
+                                    <li><a class="linkMenu" href="@Url.Action("Cadastro","Usuario")">Cadastrar</a></li>
+                                    <li><a class="linkMenu" href="@Url.Action("Index","Usuario")">Listagem</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--<li>
+                        <div>About Us</div>
+                        <ul>
+                            <li data-class="megamenu">
+                                <div class="megamenu-inner">
+                                    <div style="display: inline-block; width: 190px;">
+                                        <h3>Europe</h3>
+                                        <p>Company Gmbh.</p>
+                                        <p>Lise-Meitner-Strasse 2</p>
+                                        <p>60486 Frankfurt</p>
+                                        <p><span class="flag flag-de"></span> Germany</p>
+                                        <br />
+                                        <p><a class="mmlink" href="#">Visit Website</a></p>
+                                    </div>
+                                    <div style="display: inline-block; width: 190px;">
+                                        <h3>North America</h3>
+                                        <p>Company Inc.</p>
+                                        <p>100 North Road Street</p>
+                                        <p>60606 Chicago, IL</p>
+                                        <p><span class="flag flag-us"></span> United States</p>
+                                        <br />
+                                        <p><a class="mmlink" href="#">Visit Website</a></p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>-->
+                    <!--<li disabled="disabled">Disabled</li>-->
+                    <li data-href="#subMenu" data-class="right">
+                        <p>@UserAuth.Nome</p>
+                        <ul>
+                            <li>Perfil</li>
+                            <li>Pagamento</li>
+                            <li>Suporte</li>
+                            <li><a class="linkMenu" href="@Url.Action("Logout","Logout")">Logout</a></li>
+                        </ul>
+                    </li>
+                    <li data-role="separator" data-class="right"></li>
+                </ul>
+            </div>
+
+
+
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!--<footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Moraes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>-->
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("#mymenu").shieldMenu({
+                cls: "mymenu",
+                orientation: "horizontal"
+            });
+        });
+    </script>
+
+    <!--<script>
+        //$('.CpfCNPJ').mask('000.000.000-00', { reverse: true });
+        $(".CpfCNPJ").keydown(function () {
+            try {
+                $(".CpfCNPJ").unmask();
+            } catch (e) { }
+
+            var tamanho = $(".CpfCNPJ").val().length;
+            console.log(tamanho);
+
+            if (tamanho < 11) {
+                $('.CpfCNPJ').mask('000.000.000-00', { reverse: true });
+            } else {
+                $('.CpfCNPJ').mask('00.000.000/0000-00', { reverse: true });
+            }
+
+        });
+    </script>-->
+    <script>
+        $('.CpfCNPJ').mask('000.000.000-00', { reverse: true });
+        $('.TelefoneFixo').mask('(00) 0000-0000');
+        $('.TelefoneCelular').mask('(00) 00000-0000');
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

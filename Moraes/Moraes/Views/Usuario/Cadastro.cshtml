@@ -1,0 +1,72 @@
+﻿@model UsuarioModel
+
+<h2>Cadastro de Usuários</h2>
+
+<br />
+
+<form enctype="multipart/form-data" asp-controller="Usuario" asp-action="Cadastro">
+
+    <input type="hidden" asp-for="IdUsuario"/>
+
+    <div class="form-group">
+        <label>Nome</label>
+        <input required asp-for="Nome" type="text" class="form-control"/>
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Foto</label>
+        <!--<input asp-for="Foto" type="file" class="form-control" />
+    <span asp-validation-for="Foto" class="text-danger"></span>-->
+        <input id="Foto" name="Foto" type="file" class="form-control" />
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-6 col-6">
+            <div class="form-group">
+                <label>Perfil</label>
+                <!--<input asp-for="IdPerfil" type="text" class="form-control" value="@try {@ViewBag.Usuario.IdPerfil} catch {}" />
+                <span asp-validation-for="IdPerfil" class="text-danger"></span>-->
+                <select asp-for="IdPerfil" class="form-control">
+                    @{
+                        foreach (var item in (List<PerfilModel>)ViewBag.ListaPerfils)
+                        {
+                            <option value="@try {@item.Id} catch {}">@item.NomePerfil</option>
+                        }
+                    }
+                </select>
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-sm-6 col-12">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input required asp-for="Email" type="text" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-sm-6 col-12">
+            <div class="form-group">
+                <label>Senha</label>
+                <input required asp-for="Senha" type="password" class="form-control" />
+                <span asp-validation-for="Senha" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-sm-6 col-12">
+            <div class="form-group">
+                <label>Cor</label>
+                <!--<input type="color" value="#ff0000">-->
+                <input asp-for="Color" type="color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-block btn-success">REGISTRAR</button>
+</form>
+

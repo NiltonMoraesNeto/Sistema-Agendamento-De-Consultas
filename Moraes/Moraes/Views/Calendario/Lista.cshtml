@@ -1,0 +1,47 @@
+﻿<h1>Lista de Todas as Consultas</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center">ID</th>
+            <th class="text-center">ASSUNTO</th>
+            <th class="text-center">MÉDICO</th>
+            <th class="text-center">DATA INÍCIO</th>
+            <th class="text-center">DATA FIM</th>
+            <th class="text-center">AÇÕES</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            foreach (var item in (List<CalendarioModel>)ViewBag.Calendar)
+            {
+                <tr>
+                    <td class="text-center">@item.Id</td>
+                    <td class="text-center">@item.Assunto</td>
+                    <td class="text-center">@item.IdUsuario</td>
+                    <td class="text-center">@item.Start</td>
+                    <td class="text-center">@item.End</td>
+                    
+                    <!--<td class="text-center"> new Date(item.End).toLocaleDateString()</td>-->
+                    <td class="text-center"><button type="button" class="btn btn-warning" onclick="Editar(@item.Id)">Editar</button> <button type="button" class="btn btn-danger" onclick="Excluir(@item.Id)">Deletar</button></td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+<br />
+
+<script>
+
+    function Editar(id) {
+        window.location.href = "../Calendario/Cadastro/" + id;
+    }
+
+    function Excluir(id) {
+        window.location.href = "../Calendario/Excluir/" + id;
+    }
+
+</script>
